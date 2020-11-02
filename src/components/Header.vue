@@ -1,13 +1,69 @@
 <template>
+<div class="menu">
+  <transition  name="slide" mode="out-in" type="animation">
+  <div :class="selectMenu" v-if="!genreMenu && !eraMenu" key="general">
+    <div  class="menu--general" >
+      <div class="menu--title">
+        <div class="menu--title__logo">
+          <router-link to="/">
+            <img src="http://cosmofiction.o.c.f.unblog.fr/files/2015/01/sinok.jpg" alt="logo">
+          </router-link>
+        </div>
+        <div>RANDOM MOVIE</div>
+      </div>
+      <ul class="menu--categories">
+        <li>Filters</li>
+        <li @click="genresMenu">
+          <a>Genres</a>
+        </li>
+        <p v-if="genreSelection.length > 0">{{genreSelection.toString()}}</p>
+        <li @click="erasMenu">
+          <a>Era</a>
+        </li>
+        <p v-if="eraSelection">{{eraSelection}}</p>
+      </ul>
+      <ul class="menu--footer">
+        <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
+        <router-link v-if="!getIsLogged" to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
+        <div v-if="getIsLogged" class="LogOut" @click="logOut">Logout</div>
+      </ul>
+    </div>
+  </div>
 
-<div>
-  <ul>
-      <router-link v-if="!getIsLogged" to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
-      <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
-  </ul>
+  <div v-else-if="genreMenu" class="menu--genres__content" key="genres">
+      <div class="menu--genres__header">
+        <div class="menu--close" @click="closeMenu">
+          <a>CLEAR</a>
+        </div>
+        <div class="menu--ok" @click="selectedGenre()">
+          <a>OK</a>
+        </div>
+      </div>
 
-  <div v-if="getIsLogged" class="RandomMovieButton" @click="logOut">Logout</div>
+      <div v-for="genre in getMovieGenres" :key="genre.id">
+        <input type="checkbox" :name="genre.id" :id="genre.id" :value="genre.name" v-model="genreSelection" />
+        <label :id="genre.id" :for="genre.id">{{genre.name}}</label>
+      </div>
+    </div>
+
+  <div v-else-if="eraMenu" class="menu--genres__content" key="era">
+    <div class="menu--genres__header">
+      <div class="menu--close" @click="closeEraMenu">
+        <a>CLEAR</a>
+      </div>
+      <div class="menu--ok" @click="selectedEra()">
+        <a>OK</a>
+      </div>
+    </div>
+
+    <div v-for="era in eras" :key="era">
+      <input type="radio" :name="era" :id="era" :value="era" v-model="eraSelection" />
+      <label :id="era" :for="era">{{era}}</label>
+    </div>
+  </div>
+  </transition>
 </div>
+
 
 </template>
 
@@ -17,10 +73,31 @@ import axios from 'axios';
 
 export default {
   name: "Header.vue",
+  data(){
+    return {
+      genreSelection: [],
+      eraSelection: "",
+      genreMenu: false,
+      eraMenu: false,
+      eras : ["50's", "60's", "70's", "80's", "90's", "2000's", "2010's"]
+    }
+  },
   computed: {
     ...mapGetters([
-      'getIsLogged'
-    ])
+      'getIsLogged',
+      'getMovieGenres'
+    ]),
+    selectMenu(){
+      if(this.genreMenu){
+        return 'menu--genres'
+      }
+      else if(this.eraMenu){
+        return 'menu--genres'
+      }
+      else{
+        return 'menu--struct'
+      }
+    }
   },
   methods: {
     logOut() {
@@ -30,12 +107,251 @@ export default {
             this.$store.commit('setIsLogged', response.data.isLogged);
           })
           .catch(err => console.log(err))
-
+    },
+    genresMenu(){
+      this.genreMenu = !this.genreMenu;
+    },
+    closeMenu(){
+      this.genreSelection = [];
+      this.$store.commit('setGenresSelected',this.genreSelection);
+    },
+    closeEraMenu(){
+      this.eraSelection = "";
+      this.$store.commit('setEraSelected',this.eraSelection);
+    },
+    erasMenu(){
+      this.eraMenu = !this.eraMenu;
+    },
+    selectedGenre(){
+      this.genreMenu = !this.genreMenu;
+      this.$store.commit('setGenresSelected',this.genreSelection);
+    },
+    selectedEra(){
+      this.eraMenu = !this.eraMenu;
+      this.$store.commit('setEraSelected',this.eraSelection);
     },
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+  .menu{
+    background-color: white;
+    list-style-type: none;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    display: flex;
+    width: 320px;
+    height: 100vh;
+    color: #8DA1B5;
+    cursor: default;
+
+    a{
+      cursor: pointer;
+    }
+
+    a:link{
+      text-decoration: none;
+      color: #8DA1B5;
+    }
+
+    a:visited {
+      text-decoration: none;
+      color: #8DA1B5;
+    }
+
+    a:hover {
+      color: #011F3B;
+    }
+
+    a:active {
+      color: #011F3B;
+    }
+
+    &--close{
+      color: #011F3B;
+      cursor: pointer;
+
+      a:hover{
+        color: crimson;
+      }
+    }
+
+    &--ok{
+      color: #011F3B;
+      cursor: pointer;
+
+      a:hover{
+        color: forestgreen;
+      }
+    }
+
+    &--general{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    &--title{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-style: normal;
+      font-weight: 900;
+      font-size: 36px;
+      line-height: 44px;
+      text-align: center;
+      color: #5E81F4;
+
+      &__logo{
+        width: 73px;
+        height: 77px;
+
+        img {
+          width: 73px;
+          height: 77px;
+          border-radius: 12px;
+          transform: scaleX(-1);
+        }
+      }
+    }
+
+    &--struct{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 60px 20px;
+      width: 100%;
+    }
+
+    &--slideHeight{
+      height: 100%;
+    }
+
+    &--categories{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      height: 20vh;
+
+      li {
+        text-align: center;
+      }
+      p{
+        margin-top: -10px;
+      }
+    }
+
+    &--footer{
+      list-style-type: none;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    &--genres{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: stretch;
+      list-style-type: none;
+      font-style: normal;
+      font-weight: 900;
+      font-size: 25px;
+      line-height: 36px;
+      color: #011F3B;
+      cursor: pointer;
+      background-color: gold;
+      padding: 60px 20px;
+
+      &__header{
+        display: flex;
+        justify-content: space-evenly;
+        margin-bottom: 20px;
+      }
+
+      &__content{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        list-style-type: none;
+        font-style: normal;
+        font-weight: 900;
+        font-size: 25px;
+        line-height: 36px;
+        color: #011F3B;
+        cursor: pointer;
+        background-color: gold;
+        padding: 30px 20px;
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        input[type="checkbox"]:checked + * {
+          color: #5E81F4;
+        }
+
+        label:hover{
+          color: #5E81F4;
+          cursor: pointer;
+        }
+
+        input[type="radio"] {
+          display: none;
+        }
+
+        input[type="radio"]:checked + * {
+          color: #5E81F4;
+        }
+
+      }
+    }
+  }
+
+  .slide-enter{
+    /*opacity: 0;*/
+  }
+
+  .slide-enter-active{
+    animation: slide-in 1s ease-out forwards;
+    /*transition: opacity 1s;*/
+  }
+
+  .slide-leave{
+
+  }
+
+  .slide-leave-active{
+    animation: slide-out 1s ease-out forwards;
+    /*transition: opacity 1s;
+    opacity: 0;*/
+  }
+
+  @keyframes slide-in {
+    from{
+      transform: translateX(-320px);
+    }
+    to{
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-out {
+    from{
+      transform: translateX(0);
+    }
+    to{
+      transform: translateX(-320px);
+    }
+  }
 
 </style>

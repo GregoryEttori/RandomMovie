@@ -15,12 +15,16 @@ export default new Vuex.Store({
             email: null,
             whishList: null,
         },
+        genresSelected: [],
+        eraSelected: "",
     },
     getters: {
         getMovieContent: state => state.movieContent,
         getMovieGenres: state => state.movieGenres,
         getIsLogged: state => state.isLogged,
         getUserInfos: state => state.userInfos,
+        getGenresSelected: state => state.genresSelected,
+        getEraSelected: state => state.eraSelected,
     },
     mutations: {
         setMovieContent: (state, payload) => state.movieContent = payload,
@@ -31,6 +35,12 @@ export default new Vuex.Store({
         },
         setIsLogged: (state, payload) => {
             state.isLogged = payload
+        },
+        setGenresSelected: (state, payload) => {
+            state.genresSelected = payload
+        },
+        setEraSelected:(state, payload) => {
+            state.eraSelected = payload
         }
     },
     actions: {
@@ -39,7 +49,7 @@ export default new Vuex.Store({
                 .then(response => context.commit('setMovieGenres', response.data.genres))
                 .catch(err => console.error(err))
         },
-        fetchMovieByYearRange: (context, payload) => {
+        fetchMovie: (context, payload) => {
             let params = {
                 'api_key': process.env.VUE_APP_API_MOVIE_KEY,
                 'language': "en-US",
@@ -59,9 +69,9 @@ export default new Vuex.Store({
                 }
             }
 
-            if(payload.genre){
+            if(payload.genres){
                 console.log("avec genre");
-                params['with_genres'] = payload.genre;
+                params['with_genres'] = payload.genres;
             }
 
             axios.get('https://api.themoviedb.org/3/discover/movie', {params})

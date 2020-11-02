@@ -2,22 +2,6 @@
   <div>
     <MovieInfos v-if="displayMovieInfos"></MovieInfos>
 
-    <label for="movieGenre"> Movie Genre </label>
-    <select
-        id="movieGenre"
-        v-model="selectedMovieGenre">
-      <option v-for="movieGenre in getMovieGenres" :key="movieGenre.name">
-        {{movieGenre.name}}
-      </option>
-    </select>
-    <label for="era"> Era </label>
-    <select
-        id="era"
-        v-model="selectedMovieEra">
-      <option v-for="era in movieEra" :key="era">
-        {{era}}
-      </option>
-    </select>
     <div class="RandomMovieButton" @click="submitForm">Submit</div>
   </div>
 </template>
@@ -36,8 +20,6 @@ export default {
       displayMovieInfos: false,
       showUserInfos: false,
       filter: null,
-      selectedMovieGenre: "",
-      movieEra: ["50's","60's","70's","80's", "90's", "2000's", "2010's"],
       selectedMovieEra: "",
     }
   },
@@ -45,21 +27,27 @@ export default {
     ...mapGetters([
       'getMovieContent',
       'getMovieGenres',
-      'getIsLogged'
+      'getIsLogged',
+      'getGenresSelected',
+      'getEraSelected'
     ]),
   },
   methods: {
-
     submitForm(){
       let startingDate = null;
       let endingDate = null;
 
-      let genreId = this.getMovieGenres.find((genre) => {
-        if(genre.name === this.selectedMovieGenre)
-          return true;
-      });
+      let genresId = this.getMovieGenres.filter(genre => this.getGenresSelected.some(b => genre.name === b));
 
-      switch (this.selectedMovieEra){
+      let arrayId = [];
+
+      for(const genres of genresId){
+        arrayId.push(genres.id);
+      }
+
+      console.log(arrayId);
+
+      switch (this.getEraSelected){
         case "50's":
           startingDate = "1950-01-01";
           endingDate = "1959-12-31";
@@ -90,11 +78,12 @@ export default {
           break;
       }
       const payload = {
-        genre: genreId?.id,
+        genres: arrayId.toString(),
         startingDate: startingDate,
         endingDate : endingDate
       };
-      this.$store.dispatch('fetchMovieByYearRange', payload);
+      console.log("payload" , payload);
+      this.$store.dispatch('fetchMovie', payload);
       this.displayMovieInfos = true;
     },
   },

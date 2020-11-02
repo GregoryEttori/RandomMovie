@@ -1,6 +1,6 @@
 <template>
 <div>
-  <RandomMovie></RandomMovie>
+  <RandomMovie ></RandomMovie>
 </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'getIsLogged'
+        'getIsLogged',
+        'getMovieGenres'
     ])
   }
 }
