@@ -30,6 +30,19 @@ export default {
   display: flex;
 }
 
+.general{
+  &__title{
+    display: flex;
+    justify-content: center;
+
+    font-style: normal;
+    font-weight: 900;
+    font-size: 64px;
+    line-height: 77px;
+    color: #5E81F4;
+  }
+}
+
 body{
   background-color: #F5F5FB;
 }

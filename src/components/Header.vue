@@ -12,15 +12,21 @@
         <div>RANDOM MOVIE</div>
       </div>
       <ul class="menu--categories">
-        <li>Filters</li>
+        <li class="menu--categories__filter">Filters</li>
         <li @click="genresMenu">
           <a>Genres</a>
         </li>
-        <p v-if="genreSelection.length > 0">{{genreSelection.toString()}}</p>
+        <ul v-if="genreSelection.length > 0" key="genreSelection" class="menu--selection">
+          <li v-for="(genre, index) in genreSelection" :key="index" @click="clearGenre(genre)">{{genre}}</li>
+        </ul>
+        <!--<p v-if="genreSelection.length > 0" class="menu&#45;&#45;selection">{{genreSelection.toString()}}</p>-->
         <li @click="erasMenu">
           <a>Era</a>
         </li>
-        <p v-if="eraSelection">{{eraSelection}}</p>
+        <ul v-if="eraSelection" class="menu--selection" @click="closeEraMenu()">
+          <li>{{eraSelection}}</li>
+        </ul>
+        <!--<p v-if="eraSelection">{{eraSelection}}</p>-->
       </ul>
       <ul class="menu--footer">
         <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
@@ -41,7 +47,7 @@
       </div>
 
       <div v-for="genre in getMovieGenres" :key="genre.id">
-        <input type="checkbox" :name="genre.id" :id="genre.id" :value="genre.name" v-model="genreSelection" />
+        <input type="checkbox" :name="genre.id" :id="genre.id" :value="genre.name" v-model="genreSelection" :disabled="genreSelection.length > 2 && genreSelection.indexOf(genre.name) === -1"/>
         <label :id="genre.id" :for="genre.id">{{genre.name}}</label>
       </div>
     </div>
@@ -97,7 +103,8 @@ export default {
       else{
         return 'menu--struct'
       }
-    }
+    },
+
   },
   methods: {
     logOut() {
@@ -130,6 +137,10 @@ export default {
       this.eraMenu = !this.eraMenu;
       this.$store.commit('setEraSelected',this.eraSelection);
     },
+    clearGenre(genre){
+      this.genreSelection = this.genreSelection.filter(item => item !== genre);
+      this.$store.commit('setGenresSelected',this.genreSelection);
+    }
   }
 }
 </script>
@@ -195,6 +206,14 @@ export default {
       height: 100%;
     }
 
+    &--selection{
+      color: #5e81f4;
+
+      li:hover{
+        text-decoration-line: line-through;
+      }
+    }
+
     &--title{
       display: flex;
       flex-direction: row;
@@ -224,7 +243,7 @@ export default {
       flex-direction: column;
       justify-content: space-between;
       align-items: stretch;
-      padding: 60px 20px;
+      padding: 45px 20px;
       width: 100%;
     }
 
@@ -237,14 +256,13 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-evenly;
-      height: 20vh;
+      height: 50%;
 
       li {
         text-align: center;
       }
-      p{
-        margin-top: -10px;
-      }
+
+
     }
 
     &--footer{
@@ -300,6 +318,12 @@ export default {
           color: #5E81F4;
         }
 
+        input[type="checkbox"]:checked + :hover {
+          color: #5E81F4;
+          text-decoration-line: line-through;
+        }
+
+
         label:hover{
           color: #5E81F4;
           cursor: pointer;
@@ -322,7 +346,7 @@ export default {
   }
 
   .slide-enter-active{
-    animation: slide-in 1s ease-out forwards;
+    animation: slide-in .5s ease-out forwards;
     /*transition: opacity 1s;*/
   }
 
@@ -331,7 +355,7 @@ export default {
   }
 
   .slide-leave-active{
-    animation: slide-out 1s ease-out forwards;
+    animation: slide-out .5s ease-out forwards;
     /*transition: opacity 1s;
     opacity: 0;*/
   }
