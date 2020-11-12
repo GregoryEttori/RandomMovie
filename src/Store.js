@@ -17,6 +17,8 @@ export default new Vuex.Store({
         },
         genresSelected: [],
         eraSelected: "",
+        resetPassConf: "",
+        isPassConfSuccess: false
     },
     getters: {
         getMovieContent: state => state.movieContent,
@@ -25,6 +27,8 @@ export default new Vuex.Store({
         getUserInfos: state => state.userInfos,
         getGenresSelected: state => state.genresSelected,
         getEraSelected: state => state.eraSelected,
+        getResetPassConf : state => state.resetPassConf,
+        getIsPassConfSuccess: state => state.isPassConfSuccess
     },
     mutations: {
         setMovieContent: (state, payload) => state.movieContent = payload,
@@ -41,6 +45,10 @@ export default new Vuex.Store({
         },
         setEraSelected:(state, payload) => {
             state.eraSelected = payload
+        },
+        setResetPassConf: (state, payload) => {
+            state.resetPassConf = payload.ResetPassConfMessage;
+            state.isPassConfSuccess = payload.isPassConfSuccess
         }
     },
     actions: {

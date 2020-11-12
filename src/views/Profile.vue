@@ -10,6 +10,6 @@ name: "Profile"
 }
 </script>
 
-<style scoped>
+<style >
 
 </style>

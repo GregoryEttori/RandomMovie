@@ -1,6 +1,10 @@
 <template>
-<div>
-  <RandomMovie ></RandomMovie>
+<div class="randomMovie__container">
+  <div class="loginTop" v-if="getIsLogged">
+    <div class="regularText loginTop__space">{{getUserInfos.name}}</div>
+    <router-link to="/profile" tag="div" active-class="active" class="profileIcon"></router-link>
+  </div>
+  <RandomMovie></RandomMovie>
 </div>
 </template>
 
@@ -17,12 +21,40 @@ export default {
   computed: {
     ...mapGetters([
         'getIsLogged',
-        'getMovieGenres'
+        'getMovieGenres',
+        'getUserInfos'
     ])
+  },
+  methods: {
+    toProfilePage(){
+
+    }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+.profileIcon{
+  background-image: url("../../public/img/cthulhu.png");
+  background-repeat: no-repeat;
+  width: 73px;
+  height: 77px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.loginTop{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 77px;
+  margin-bottom: 50px;
+  padding: 0 70px 0 70px;
+
+  &__space{
+    margin-right: 20px;
+  }
+
+}
 
 </style>

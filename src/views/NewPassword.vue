@@ -1,33 +1,46 @@
 <template>
   <div class="user__login">
-    <div v-if="isError">{{ errorText }}</div>
-    <h1>Set your New Password</h1>
-    <div class="user__register--field" :class="{invalid: $v.newPasswordForm.password.$error && $v.newPasswordForm.password.required}">
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" v-model="user.password" @blur="$v.newPasswordForm.password.$touch()">
-      <div class="user__register--field invalid" v-if="!$v.newPasswordForm.password.minLength"> Password length must be at least 8 characters. </div>
-      <div v-if="isSubmitted">
-        <div class="user__register--field invalid" v-if="!$v.newPasswordForm.password.required"> Field is required. </div>
-        <div class="user__register--field invalid" v-if="!$v.newPasswordForm.password.minLength"> Password length must be at least 8 characters. </div>
-      </div>
+
+    <div class="general__title">SET YOUR NEW PASSWORD</div>
+    <div class="user__form">
+      <Field
+          :validation="$v.newPasswordForm"
+          :is-submitted="isSubmitted"
+          field-name="password"
+          fieldType="password"
+          label="Password"
+          v-model="newPasswordForm.password"
+      />
+
+      <Field
+          :validation="$v.newPasswordForm"
+          :is-submitted="isSubmitted"
+          field-name="passwordConfirmation"
+          fieldType="password"
+          label="Password Confirmation"
+          v-model="newPasswordForm.passwordConfirmation"
+      />
     </div>
 
-    <div class="user__login--submit" @click="submitNewPassword"> Validate </div>
+    <div class="user__submit" @click="submitNewPassword"> Validate </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import {required, minLength} from 'vuelidate/lib/validators';
+import {required, minLength, sameAs} from 'vuelidate/lib/validators';
+
+import Field from "@/components/Field";
 
 export default {
   name: "NewPassword",
   data(){
     return {
-      user: {
+      newPasswordForm: {
         passwordToken: "",
         userId: "",
-        password: ""
+        password: "",
+        passwordConfirmation: ""
       },
       isSubmitted: false,
       isError: false,
@@ -35,17 +48,18 @@ export default {
     }
   },
   mounted() {
-    this.user.passwordToken = this.$route.params.token;
-    axios.get(`http://192.168.1.13:3000/reset/${this.user.passwordToken}`)
+    this.newPasswordForm.passwordToken = this.$route.params.token;
+    axios.get(`http://192.168.1.19:3000/reset/${this.newPasswordForm.passwordToken}`)
         .then(response => {
-          return this.user.userId = response.data.userId
+          return this.newPasswordForm.userId = response.data.userId
         })
         .catch(err => console.log(err));
   },
   methods: {
     submitNewPassword(){
       this.isSubmitted = true;
-      axios.post('http://192.168.1.13:3000/new-password', this.user
+      console.log(this.newPasswordForm);
+      axios.post('http://192.168.1.19:3000/new-password', this.newPasswordForm
       ).then(response => {
         console.log(response.data);
         this.$router.push(response.data);
@@ -64,7 +78,11 @@ export default {
   validations: {
     newPasswordForm:{
       password: {required, minLength: minLength(8)},
+      passwordConfirmation: {required, sameAs: sameAs('password')}
     }
+  },
+  components: {
+  Field
   }
 }
 </script>

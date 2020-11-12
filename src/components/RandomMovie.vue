@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <MovieInfos v-if="displayMovieInfos"></MovieInfos>
+  <div class="randomMovie">
+    <div class="randomMovie__welcome" :class="getIsLogged ? 'main__withPadding' : ''" v-if="!displayMovieInfos">
+      <div class="general__title">DON'T KNOW WHAT TO WATCH ?</div>
+      <div class="user__submit" @click="submitForm">FIND A MOVIE !</div>
+    </div>
 
-    <div class="RandomMovieButton" @click="submitForm">Submit</div>
+    <div v-if="displayMovieInfos">
+      <MovieInfos></MovieInfos>
+    </div>
+
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import {mapGetters} from 'vuex';
 import MovieInfos from "@/components/MovieInfos";
+import submitNext from "@/mixins/submitNext";
 
 export default {
   name: "RandomButton",
@@ -32,67 +38,7 @@ export default {
       'getEraSelected'
     ]),
   },
-  methods: {
-    submitForm(){
-      let startingDate = null;
-      let endingDate = null;
-
-      let genresId = this.getMovieGenres.filter(genre => this.getGenresSelected.some(b => genre.name === b));
-
-      let arrayId = [];
-
-      for(const genres of genresId){
-        arrayId.push(genres.id);
-      }
-
-      console.log(arrayId);
-
-      switch (this.getEraSelected){
-        case "50's":
-          startingDate = "1950-01-01";
-          endingDate = "1959-12-31";
-          break;
-        case "60's":
-          startingDate = "1960-01-01";
-          endingDate = "1969-12-31";
-          break;
-        case "70's":
-          startingDate = "1970-01-01";
-          endingDate = "1979-12-31";
-          break;
-        case "80's":
-          startingDate = "1980-01-01";
-          endingDate = "1989-12-31";
-          break;
-        case "90's":
-          startingDate = "1990-01-01";
-          endingDate = "1999-12-31";
-          break;
-        case "2000's":
-          startingDate = "2000-01-01";
-          endingDate = "2009-12-31";
-          break;
-        case "2010's":
-          startingDate = "2010-01-01";
-          endingDate = "2019-12-31";
-          break;
-      }
-      const payload = {
-        genres: arrayId.toString(),
-        startingDate: startingDate,
-        endingDate : endingDate
-      };
-      console.log("payload" , payload);
-      this.$store.dispatch('fetchMovie', payload);
-      this.displayMovieInfos = true;
-    },
-  },
-  mounted(){
-    axios.get('https://api.themoviedb.org/3/discover/movie?api_key=' +process.env.VUE_APP_API_MOVIE_KEY +'&language=en-US%2C%20FR&sort_by=popularity.desc&include_adult=false&include_video=false&vote_average.gte=6&without_genres=99')
-        .then(response => (this.moviesContent = response.data))
-        .catch(err => console.error(err))
-    this.$store.dispatch('fetchMovieGenres');
-  }
+  mixins: [submitNext]
 }
 
 export function getRandomInt(max) {
@@ -102,7 +48,60 @@ export function getRandomInt(max) {
 </script>
 
 <style lang="scss">
-.RandomMovieButton{
-  background: red;
+.randomMovie{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+
+  &__welcome{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &__withPadding{
+      padding-top: 144px;
+    }
+  }
+
+  &__container{
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 54px 0 45px;
+  }
+
+  &__next{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 200px;
+    height: 62px;
+    border-radius: 57px;
+    background: #5E81F4;
+    padding: 0 50px 0 50px;
+  }
 }
+
+
+.main{
+
+
+}
+
+.general{
+  &__title{
+    font-size: 46px;
+    line-height: 44px;
+    cursor: default;
+  }
+}
+
 </style>

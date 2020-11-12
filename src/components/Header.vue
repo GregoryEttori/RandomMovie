@@ -1,74 +1,75 @@
 <template>
-<div class="menu">
-  <transition  name="slide" mode="out-in" type="animation">
-  <div :class="selectMenu" v-if="!genreMenu && !eraMenu" key="general">
-    <div  class="menu--general" >
-      <div class="menu--title">
-        <div class="menu--title__logo">
-          <router-link to="/">
-            <img src="http://cosmofiction.o.c.f.unblog.fr/files/2015/01/sinok.jpg" alt="logo">
-          </router-link>
+  <div class="menu">
+    <transition  name="slide" mode="out-in" type="animation">
+      <div :class="selectMenu" v-if="!genreMenu && !eraMenu" key="general">
+        <div  class="menu--general" >
+          <div class="menu--title">
+            <div class="menu--title__logo">
+              <router-link to="/">
+                <img src="../../public/img/film-roll.png" alt="logo">
+              </router-link>
+            </div>
+            <div>RANDOM MOVIE</div>
+          </div>
+          <ul class="menu--categories">
+            <li class="menu--categories__filter">Filters</li>
+            <li @click="genresMenu">
+              <a>Genres</a>
+            </li>
+            <ul v-if="genreSelection.length > 0" key="genreSelection" class="menu--selection">
+              <li v-for="(genre, index) in genreSelection" :key="index" @click="clearGenre(genre)">{{genre}}</li>
+            </ul>
+            <!--<p v-if="genreSelection.length > 0" class="menu&#45;&#45;selection">{{genreSelection.toString()}}</p>-->
+            <li @click="erasMenu">
+              <a>Era</a>
+            </li>
+            <ul v-if="eraSelection" class="menu--selection" @click="closeEraMenu()">
+              <li>{{eraSelection}}</li>
+            </ul>
+            <!--<p v-if="eraSelection">{{eraSelection}}</p>-->
+          </ul>
+          <ul class="menu--footer">
+            <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
+            <router-link v-if="!getIsLogged" to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
+            <div v-if="getIsLogged" class="menu--categories__logOut" @click="logOut">Logout</div>
+          </ul>
         </div>
-        <div>RANDOM MOVIE</div>
       </div>
-      <ul class="menu--categories">
-        <li class="menu--categories__filter">Filters</li>
-        <li @click="genresMenu">
-          <a>Genres</a>
-        </li>
-        <ul v-if="genreSelection.length > 0" key="genreSelection" class="menu--selection">
-          <li v-for="(genre, index) in genreSelection" :key="index" @click="clearGenre(genre)">{{genre}}</li>
-        </ul>
-        <!--<p v-if="genreSelection.length > 0" class="menu&#45;&#45;selection">{{genreSelection.toString()}}</p>-->
-        <li @click="erasMenu">
-          <a>Era</a>
-        </li>
-        <ul v-if="eraSelection" class="menu--selection" @click="closeEraMenu()">
-          <li>{{eraSelection}}</li>
-        </ul>
-        <!--<p v-if="eraSelection">{{eraSelection}}</p>-->
-      </ul>
-      <ul class="menu--footer">
-        <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
-        <router-link v-if="!getIsLogged" to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
-        <div v-if="getIsLogged" class="LogOut" @click="logOut">Logout</div>
-      </ul>
-    </div>
+
+      <div v-else-if="genreMenu" class="menu--genres__content" key="genres">
+        <div class="menu--genres__header">
+          <div class="menu--close" @click="closeMenu">
+            <a>CLEAR</a>
+          </div>
+          <div class="menu--ok" @click="selectedGenre()">
+            <a>OK</a>
+          </div>
+        </div>
+
+        <div v-for="genre in getMovieGenres" :key="genre.id">
+          <input type="checkbox" :name="genre.id" :id="genre.id" :value="genre.name" v-model="genreSelection" :disabled="genreSelection.length > 2 && genreSelection.indexOf(genre.name) === -1"/>
+          <label :id="genre.id" :for="genre.id">{{genre.name}}</label>
+        </div>
+      </div>
+
+      <div v-else-if="eraMenu" class="menu--genres__content" key="era">
+        <div class="menu--genres__header">
+          <div class="menu--close" @click="closeEraMenu">
+            <a>CLEAR</a>
+          </div>
+          <div class="menu--ok" @click="selectedEra()">
+            <a>OK</a>
+          </div>
+        </div>
+
+        <div v-for="era in eras" :key="era">
+          <input type="radio" :name="era" :id="era" :value="era" v-model="eraSelection" />
+          <label :id="era" :for="era">{{era}}</label>
+        </div>
+      </div>
+    </transition>
   </div>
 
-  <div v-else-if="genreMenu" class="menu--genres__content" key="genres">
-      <div class="menu--genres__header">
-        <div class="menu--close" @click="closeMenu">
-          <a>CLEAR</a>
-        </div>
-        <div class="menu--ok" @click="selectedGenre()">
-          <a>OK</a>
-        </div>
-      </div>
-
-      <div v-for="genre in getMovieGenres" :key="genre.id">
-        <input type="checkbox" :name="genre.id" :id="genre.id" :value="genre.name" v-model="genreSelection" :disabled="genreSelection.length > 2 && genreSelection.indexOf(genre.name) === -1"/>
-        <label :id="genre.id" :for="genre.id">{{genre.name}}</label>
-      </div>
-    </div>
-
-  <div v-else-if="eraMenu" class="menu--genres__content" key="era">
-    <div class="menu--genres__header">
-      <div class="menu--close" @click="closeEraMenu">
-        <a>CLEAR</a>
-      </div>
-      <div class="menu--ok" @click="selectedEra()">
-        <a>OK</a>
-      </div>
-    </div>
-
-    <div v-for="era in eras" :key="era">
-      <input type="radio" :name="era" :id="era" :value="era" v-model="eraSelection" />
-      <label :id="era" :for="era">{{era}}</label>
-    </div>
-  </div>
-  </transition>
-</div>
 
 
 </template>
@@ -108,10 +109,14 @@ export default {
   },
   methods: {
     logOut() {
-      axios.post('http://192.168.1.13:3000/logout')
+      axios.post('http://192.168.1.19:3000/logout')
           .then(response => {
-            this.$router.push(response.data.path).catch(()=>{});
-            this.$store.commit('setIsLogged', response.data.isLogged);
+            console.log(this.$router);
+            this.$router.push(response.data.path);
+            this.$store.commit('setUserInfos', {data: {
+                name : "",
+                email: ""
+              }, logged: false})
           })
           .catch(err => console.log(err))
     },
@@ -147,6 +152,7 @@ export default {
 
 <style lang="scss">
   .menu{
+    position: fixed;
     background-color: white;
     list-style-type: none;
     font-style: normal;
@@ -158,6 +164,10 @@ export default {
     height: 100vh;
     color: #8DA1B5;
     cursor: default;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
 
     a{
       cursor: pointer;
@@ -262,6 +272,13 @@ export default {
         text-align: center;
       }
 
+      &__logOut{
+        cursor: pointer;
+
+        &:hover{
+          color: #011F3B;
+        }
+      }
 
     }
 
@@ -272,7 +289,7 @@ export default {
     }
 
     &--genres{
-      width: 100%;
+      width: 320px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -294,7 +311,7 @@ export default {
       }
 
       &__content{
-        width: 100%;
+        width: 320px;
         height: 100vh;
         display: flex;
         flex-direction: column;
@@ -341,6 +358,10 @@ export default {
     }
   }
 
+  .menu::-webkit-scrollbar {
+    display: none;
+  }
+
   .slide-enter{
     /*opacity: 0;*/
   }
@@ -375,6 +396,12 @@ export default {
     }
     to{
       transform: translateX(-320px);
+    }
+  }
+
+  @media screen and (max-width: 1200px){
+    .menu{
+      display: none;
     }
   }
 
