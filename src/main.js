@@ -7,6 +7,12 @@ import PerfectScrollbar from "vue2-perfect-scrollbar";
 
 import {routes} from "../routes";
 
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+
+axios.defaults.withCredentials = true;
+Vue.use(VueAxios, axios);
+
 Vue.config.productionTip = false
 
 Vue.use(VueRouter)

@@ -52,6 +52,7 @@ export function getRandomInt(max) {
   display: flex;
   flex: 1;
   justify-content: center;
+  align-items: center;
 
   &__welcome{
     display: flex;
@@ -87,6 +88,10 @@ export function getRandomInt(max) {
     border-radius: 57px;
     background: #5E81F4;
     padding: 0 50px 0 50px;
+
+    &:hover {
+      transform: scale(1.03);
+    }
   }
 }
 

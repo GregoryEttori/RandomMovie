@@ -31,7 +31,7 @@
           <ul class="menu--footer">
             <router-link v-if="!getIsLogged" to="/signup" tag="li" active-class="active"><a>Sign Up</a></router-link>
             <router-link v-if="!getIsLogged" to="/login" tag="li" active-class="active" exact><a>Login</a></router-link>
-            <div v-if="getIsLogged" class="menu--categories__logOut" @click="logOut">Logout</div>
+            <div v-if="getIsLogged" class="menu--categories__logOut" @click="logOut(getUserInfos)">Logout</div>
           </ul>
         </div>
       </div>
@@ -92,7 +92,8 @@ export default {
   computed: {
     ...mapGetters([
       'getIsLogged',
-      'getMovieGenres'
+      'getMovieGenres',
+      'getUserInfos'
     ]),
     selectMenu(){
       if(this.genreMenu){
@@ -108,15 +109,15 @@ export default {
 
   },
   methods: {
-    logOut() {
-      axios.post('http://192.168.1.19:3000/logout')
+    logOut(userInfo) {
+      axios.post('http://192.168.1.19:3000/logout', userInfo)
           .then(response => {
             console.log(this.$router);
             this.$router.push(response.data.path);
             this.$store.commit('setUserInfos', {data: {
                 name : "",
                 email: ""
-              }, logged: false})
+              }, logged: response.data.isLogged})
           })
           .catch(err => console.log(err))
     },

@@ -37,9 +37,9 @@ export default {
 .profileIcon{
   background-image: url("../../public/img/cthulhu.png");
   background-repeat: no-repeat;
-  width: 73px;
-  height: 77px;
-  border-radius: 100px;
+  width: 61px;
+  height: 61px;
+  border-radius: 50%;
   cursor: pointer;
 }
 

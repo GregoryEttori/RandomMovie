@@ -101,7 +101,7 @@ export default {
       display: flex;
       position: relative;
       width: 300px;
-      height: 486px;
+      height: 479px;
       border-radius: 10px;
       content: "";
       background-size: cover;
