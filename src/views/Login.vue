@@ -62,7 +62,10 @@ export default {
         this.$store.commit('setUserInfos', {data: {
             name : response.data.name,
             email: response.data.email
-          }, logged: true})
+          }});
+        this.$store.commit('setIsLogged', response.data.isLoggedIn);
+        console.log(response.data.wishlist);
+        this.$store.commit('setWishList', response.data.wishlist);
       }).catch(err => {
         if(err.response.data.errorMessage.length > 1 && !this.$v.loginForm.$invalid){
           this.isError = true;

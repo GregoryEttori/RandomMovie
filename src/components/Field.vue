@@ -9,7 +9,7 @@
             :type=fieldType
             class="input__field input__field--yoko"
             @input="process"
-            autocomplete="off">
+            :autocomplete="fieldType === 'password' ? 'on' : 'off'">
 
           <label class="input__label input__label--yoko" :for=fieldName>
 						<span class="input__label-content input__label-content--yoko">{{label}}</span>

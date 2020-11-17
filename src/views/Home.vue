@@ -25,11 +25,6 @@ export default {
         'getUserInfos'
     ])
   },
-  methods: {
-    toProfilePage(){
-
-    }
-  }
 }
 </script>
 

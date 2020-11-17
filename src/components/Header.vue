@@ -117,7 +117,10 @@ export default {
             this.$store.commit('setUserInfos', {data: {
                 name : "",
                 email: ""
-              }, logged: response.data.isLogged})
+              }
+            });
+            this.$store.commit('setIsLogged', response.data.isLogged);
+            this.$store.commit('setWishList', []);
           })
           .catch(err => console.log(err))
     },

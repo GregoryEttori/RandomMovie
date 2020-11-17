@@ -9,7 +9,7 @@
   <div class="general__title profile__title">WISHLIST</div>
 
   <div class="profile__wishlist">
-
+      {{getWishList}}
   </div>
 
   <div class="profile__alignButton">
@@ -28,13 +28,14 @@ export default {
 name: "Profile",
   computed: {
   ...mapGetters([
-      'getUserInfos'
+      'getUserInfos',
+      'getWishList'
   ])
   },
   methods: {
-    deleteUser(userInfo){
+  deleteUser(userInfo){
 
-       prompt('Are you sure ?')
+     alert('Are you sure ?')
 
       axios.post("http://192.168.1.19:3000/delete-user", userInfo )
           .then(response => {
@@ -47,8 +48,10 @@ name: "Profile",
           })
           .catch(err => console.log(err))
     }
-  }
+  },
 }
+
+
 </script>
 
 <style lang="scss">

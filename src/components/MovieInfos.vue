@@ -8,6 +8,9 @@
         <div class="movieContent__infos--overview">{{getMovieContent.overview}}</div>
 
         <div class="randomMovie__next" @click="submitForm">NEXT !</div>
+
+        <div v-if="getIsLogged" class="randomMovie__next" @click="addToWishlist"> + </div>
+
       </div>
 
       <div v-if="getMovieContent.poster_path" class="movieContent__image">
@@ -21,6 +24,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 import {mapGetters} from 'vuex';
 import submitNext from "@/mixins/submitNext";
 
@@ -32,13 +37,31 @@ export default {
       'getMovieGenres',
       'getIsLogged',
       'getGenresSelected',
-      'getEraSelected'
+      'getEraSelected',
+      'getUserInfos'
     ]),
     year(){
       if(this.getMovieContent.release_date){
         return this.getMovieContent.release_date.split("-")[0];
       }
       return "";
+    }
+  },
+  methods: {
+    addToWishlist(){
+      const payload = {
+        filmId: this.getMovieContent.id,
+        title: this.getMovieContent.title,
+        year: this.year,
+        overview: this.getMovieContent.overview,
+        poster_path: this.getMovieContent.poster_path
+      }
+      console.log(payload);
+      axios.post('http://192.168.1.19:3000/user-actions/add-to-wishlist', payload ).then(response => {
+        this.$store.commit('setWishList', response.data.wishlist);
+        console.log(response.data.message);
+        console.log(response.data.wishlist);
+      }).catch(error => console.log(error));
     }
   },
   mixins: [submitNext]

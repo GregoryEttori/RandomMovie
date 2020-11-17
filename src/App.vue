@@ -1,9 +1,7 @@
 <template>
   <div id="app">
 
-    <perfect-scrollbar>
       <Header></Header>
-    </perfect-scrollbar>
 
     <div class="app__contain">
       <router-view></router-view>
@@ -28,7 +26,9 @@ export default {
     Header
   },
   mounted(){
-    axios.get('https://api.themoviedb.org/3/discover/movie?api_key=' +process.env.VUE_APP_API_MOVIE_KEY +'&language=en-US%2C%20FR&sort_by=popularity.desc&include_adult=false&include_video=false&vote_average.gte=6&without_genres=99')
+    axios.get('https://api.themoviedb.org/3/discover/movie?api_key=' +process.env.VUE_APP_API_MOVIE_KEY
+        +'&language=en-US%2C%20FR&sort_by=popularity.desc&include_adult=false&include_video=false&vote_average.gte=6&without_genres=99',
+        {withCredentials: false})
         .then(response => (this.moviesContent = response.data))
         .catch(err => console.error(err))
     this.$store.dispatch('fetchMovieGenres');
@@ -38,7 +38,6 @@ export default {
 
 <style lang="scss">
 
-@import '~vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css';
 @import '~reset.css/reset.css';
 
 

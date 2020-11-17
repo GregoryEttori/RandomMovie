@@ -25,7 +25,7 @@ export default {
       moviesContent: {},
       displayMovieInfos: false,
       showUserInfos: false,
-      filter: null,
+      //filter: null,
       selectedMovieEra: "",
     }
   },

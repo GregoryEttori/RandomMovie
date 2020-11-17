@@ -13,8 +13,9 @@ export default new Vuex.Store({
         userInfos: {
             name: null,
             email: null,
-            whishList: null,
         },
+        wishList: [],
+        wishListContent: [],
         genresSelected: [],
         eraSelected: "",
         resetPassConf: "",
@@ -28,14 +29,16 @@ export default new Vuex.Store({
         getGenresSelected: state => state.genresSelected,
         getEraSelected: state => state.eraSelected,
         getResetPassConf : state => state.resetPassConf,
-        getIsPassConfSuccess: state => state.isPassConfSuccess
+        getIsPassConfSuccess: state => state.isPassConfSuccess,
+        getWishList: state => state.wishList,
+        getWishListContent: state => state.wishListContent
     },
     mutations: {
         setMovieContent: (state, payload) => state.movieContent = payload,
         setMovieGenres: (state, payload) => state.movieGenres = payload,
         setUserInfos: (state, payload) => {
             state.userInfos = payload.data;
-            state.isLogged = payload.logged;
+            //state.userInfos.wishilist.push(payload.data.wishilist);
         },
         setIsLogged: (state, payload) => {
             state.isLogged = payload
@@ -49,11 +52,22 @@ export default new Vuex.Store({
         setResetPassConf: (state, payload) => {
             state.resetPassConf = payload.ResetPassConfMessage;
             state.isPassConfSuccess = payload.isPassConfSuccess
+        },
+        setWishList: (state, payload) => {
+            state.wishList = payload;
+        },
+        setWishListContent: (state, payload) => {
+            state.wishListContent = payload;
+        },
+        addWishListContent: (state, payload) => {
+            state.wishListContent.push(payload);
         }
     },
     actions: {
         fetchMovieGenres: context => {
-            axios.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +process.env.VUE_APP_API_MOVIE_KEY)
+            axios.get('https://api.themoviedb.org/3/genre/movie/list?api_key=' +process.env.VUE_APP_API_MOVIE_KEY, {
+                withCredentials: false
+            })
                 .then(response => context.commit('setMovieGenres', response.data.genres))
                 .catch(err => console.error(err))
         },
@@ -65,7 +79,7 @@ export default new Vuex.Store({
                 'include_adult': "false",
                 'include_video': "false",
                 'vote_average.gte': "6",
-                'without_genres': "99"
+                'without_genres': "99",
             };
 
             if(payload.startingDate && payload.endingDate){
@@ -82,12 +96,13 @@ export default new Vuex.Store({
                 params['with_genres'] = payload.genres;
             }
 
-            axios.get('https://api.themoviedb.org/3/discover/movie', {params})
+            axios.get('https://api.themoviedb.org/3/discover/movie', {params, withCredentials: false})
                 .then(response => {
                     const totalPages = response.data.total_pages;
                     const page = getRandomInt(totalPages);
                     axios.get('https://api.themoviedb.org/3/discover/movie', {
-                        params: {...params, page}
+                        params: {...params, page},
+                        withCredentials: false
                     })
                     .then(response =>
                         {
