@@ -66,6 +66,7 @@ export default {
         this.$store.commit('setIsLogged', response.data.isLoggedIn);
         console.log(response.data.wishlist);
         this.$store.commit('setWishList', response.data.wishlist);
+        this.$store.dispatch('fetchMovie', {data : {}});
       }).catch(err => {
         if(err.response.data.errorMessage.length > 1 && !this.$v.loginForm.$invalid){
           this.isError = true;

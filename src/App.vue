@@ -37,7 +37,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+@import "~vuejs-dialog/dist/vuejs-dialog.min.css";
 @import '~reset.css/reset.css';
 
 
@@ -82,6 +82,72 @@ export default {
 
 body{
   background-color: #F5F5FB;
+}
+
+.dg-content-body{
+  border-bottom: none !important;
+  text-align: center;
+}
+
+.dg-content-cont {
+  font-family: Inter, Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 26px;
+  color: #011F3B;
+  cursor: default;
+}
+
+.dg-main-content{
+  //changer le fond du alert
+  max-width: 346px;
+  height: 230px;
+  border-radius: 20px !important;
+  padding: 40px !important;
+}
+
+.dg-content-footer {
+  position: relative;
+  padding: 20px 0 0;
+}
+
+.dg-content{
+  //changer font
+  font-family: Inter, Helvetica, Arial, sans-serif !important;
+  color: #9b9ea1;
+}
+
+.dg-title{
+  font-family: Inter, Helvetica, Arial, sans-serif !important;
+}
+
+.dg-btn--cancel{
+  color: #fefefe !important;
+  background-color: #c2d4ef !important;
+}
+
+.dg-btn{
+  font-family: Inter, Helvetica, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  border-radius: 30px !important;
+  min-width: 130px !important;
+  min-height: 40px !important;
+
+  &:hover{
+    transform: scale(1.03);
+  }
+}
+
+.dg-btn--ok{
+  color: #f5f5f5 !important;
+  background-color: #e64a3e !important;
+  border-color: #e64a3e !important;
+}
+
+.vm--modal{
+  border-radius: 30px !important;
+  height: auto !important;
 }
 
 @media screen and (max-width: 1200px){

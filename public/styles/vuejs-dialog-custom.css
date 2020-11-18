@@ -1,0 +1,57 @@
+
+.dg-content-body{
+    border-bottom: 1px;
+    text-align: center;
+}
+
+.dg-content-cont {
+    font-family: Inter, Helvetica, Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    color: #011F3B;
+    cursor: default;
+}
+
+.dg-main-content{
+//changer le fond du alert
+max-width: 346px;
+    height: 230px;
+    border-radius: 20px;
+    padding: 40px;
+}
+
+.dg-content-footer {
+    position: relative;
+    padding: 27px 0 0;
+}
+
+.dg-content{
+//changer font
+font-family: Inter, Helvetica, Arial, sans-serif;
+    color: #9b9ea1;
+}
+
+
+.dg-btn--cancel{
+    color: #fefefe;
+    background-color: #dbe9fe;
+}
+
+.dg-btn{
+//changer couleur bouton "cancel" et police
+border-radius: 30px;
+    min-width: 122px;
+    min-height: 38px;
+}
+
+.dg-pull-right{
+//changer couleur bouton "continue" et police
+}
+
+.dg-btn--ok{
+    color: #f5f5f5;
+    background-color: #e64a3e;
+    border-color: #e64a3e;
+}

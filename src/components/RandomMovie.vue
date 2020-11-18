@@ -1,11 +1,14 @@
 <template>
   <div class="randomMovie">
-    <div class="randomMovie__welcome" :class="getIsLogged ? 'main__withPadding' : ''" v-if="!displayMovieInfos">
+    <div class="randomMovie__welcome"
+         :class="getIsLogged ? 'main__withPadding' : ''"
+         v-if="!displayMovieInfos && !getIsLogged"
+    >
       <div class="general__title">DON'T KNOW WHAT TO WATCH ?</div>
       <div class="user__submit" @click="submitForm">FIND A MOVIE !</div>
     </div>
 
-    <div v-if="displayMovieInfos">
+    <div v-if="displayMovieInfos || getIsLogged">
       <MovieInfos></MovieInfos>
     </div>
 

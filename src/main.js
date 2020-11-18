@@ -4,6 +4,9 @@ import store from "./Store.js";
 import Vuelidate from "vuelidate/src";
 import VueRouter from 'vue-router';
 import PerfectScrollbar from "vue2-perfect-scrollbar";
+import VuejsDialog from 'vuejs-dialog';
+import VModal from 'vue-js-modal';
+import Toasted from 'vue-toasted';
 
 import {routes} from "../routes";
 
@@ -18,7 +21,9 @@ Vue.config.productionTip = false
 Vue.use(VueRouter)
 Vue.use(Vuelidate);
 Vue.use(PerfectScrollbar);
-
+Vue.use(VuejsDialog);
+Vue.use(VModal);
+Vue.use(Toasted);
 
 const router = new VueRouter({
   mode: 'history',
