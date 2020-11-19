@@ -7,10 +7,21 @@
         <hr>
         <div class="movieContent__infos--overview">{{getMovieContent.overview}}</div>
 
-        <div class="randomMovie__next" @click="submitForm">NEXT !</div>
-
-        <div v-if="getIsLogged" class="randomMovie__next" @click="addToWishlist"> + </div>
-
+        <div class="movieContent__actions">
+          <div class="randomMovie__next" @click="submitForm">NEXT !</div>
+          <div v-if="getIsLogged" class="movieContent__actions--buttonAddFilm" @click="addToWishlist"
+               v-tooltip="{
+                content: msg,
+                placement: 'top-center',
+                classes: ['info'],
+                targetClasses: ['it-has-a-tooltip'],
+                delay: {
+                  show: 300,
+                },
+              }">
+            +
+          </div>
+        </div>
       </div>
 
       <div v-if="getMovieContent.poster_path" class="movieContent__image">
@@ -31,6 +42,11 @@ import submitNext from "@/mixins/submitNext";
 
 export default {
   name: "MovieInfos",
+  data(){
+    return {
+      msg: "Add to your wishlist"
+    }
+  },
   computed: {
     ...mapGetters([
       'getMovieContent',
@@ -61,6 +77,12 @@ export default {
         this.$store.commit('setWishList', response.data.wishlist);
         console.log(response.data.message);
         console.log(response.data.wishlist);
+        this.$toasted.success("Film added to your profile",{
+          theme: "bubble",
+          position: "bottom-center",
+          duration : 2000,
+          className: "filmAdded",
+        });
       }).catch(error => console.log(error));
     }
   },
@@ -136,6 +158,31 @@ export default {
       }
     }
 
+  }
+
+  &__actions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &--buttonAddFilm{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 27px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 61px;
+      height: 61px;
+      border-radius: 50%;
+      background: #5E81F4;
+
+      &:hover {
+        transform: scale(1.03);
+      }
+    }
   }
 
 }

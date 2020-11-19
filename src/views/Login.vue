@@ -5,7 +5,7 @@
 
     <div class="user__form user__login--form">
 
-    <div class="user__errorMessage user__login--error"> {{isError ? errorMessage : ""}}</div>
+    <!--<div class="user__errorMessage user__login&#45;&#45;error"> {{isError ? errorMessage : ""}}</div>-->
 
     <Field
         :validation="$v.loginForm"
@@ -71,6 +71,13 @@ export default {
         if(err.response.data.errorMessage.length > 1 && !this.$v.loginForm.$invalid){
           this.isError = true;
         }
+        console.log(err.response.data.errorMessage);
+        this.$toasted.error(err.response.data.errorMessage,{
+          theme: "bubble",
+          position: "bottom-center",
+          duration : 4000,
+          className: "loginError",
+        });
         this.errorMessage = err.response.data.errorMessage;
 
       });

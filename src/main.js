@@ -7,6 +7,7 @@ import PerfectScrollbar from "vue2-perfect-scrollbar";
 import VuejsDialog from 'vuejs-dialog';
 import VModal from 'vue-js-modal';
 import Toasted from 'vue-toasted';
+import VTooltip from 'v-tooltip';
 
 import {routes} from "../routes";
 
@@ -24,6 +25,7 @@ Vue.use(PerfectScrollbar);
 Vue.use(VuejsDialog);
 Vue.use(VModal);
 Vue.use(Toasted);
+Vue.use(VTooltip);
 
 const router = new VueRouter({
   mode: 'history',

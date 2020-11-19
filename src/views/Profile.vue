@@ -110,10 +110,11 @@ name: "Profile",
             console.log(response.data);
             this.$store.commit('setWishList', response.data.wishList);
             this.deleteMovieConfirmation = response.data.message;
-            this.$toasted.show(response.data.message,{
+            this.$toasted.error(response.data.message,{
               theme: "bubble",
               position: "bottom-left",
-              duration : 2000
+              duration : 2000,
+              className: "filmDeleted",
             });
       })
           .catch(err => console.log(err))
