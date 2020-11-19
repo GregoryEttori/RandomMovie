@@ -1,5 +1,7 @@
 # random-movie
 
+Projet proposition aléatoire de films, utilisation API MovieDB, API USER (User-Backend)
+
 ## Project setup
 ```
 yarn install
